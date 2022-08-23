@@ -202,6 +202,7 @@ class AppMetrics:
     """
 
     def __init__(self, PROMETHEUS_PREFIX='', pool_frequency=5, device='/dev/ttyUSB0', baudrate=115200):
+        self.gas_value=0
         if PROMETHEUS_PREFIX != '':
             PROMETHEUS_PREFIX = PROMETHEUS_PREFIX + "_"
 
@@ -229,12 +230,11 @@ class AppMetrics:
         values = self.meter.read_one_packet()
 
         if values._keys["GAS_READING"]:
-            global gas_value
             
-            if gas_value > 0:
+            if self.gas_value > 0:
                 if values._keys["GAS_READING"] > 0:
-                    values._keys["GAS_DELTA"] = values._keys["GAS_READING"] - gas_value
-            gas_value = values._keys["GAS_READING"]
+                    values._keys["GAS_DELTA"] = values._keys["GAS_READING"] - self.gas_value
+            self.gas_value = values._keys["GAS_READING"]
 
         json_body = { k: v for k, v in values._keys.items() }                     
 
