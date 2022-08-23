@@ -1,0 +1,10 @@
+version: '3.7'
+
+services:
+  p1exporter:
+    image: revenberg/p1exporter
+    container_name: p1exporter
+    environment:
+      - PROMETHEUS_PORT=9005
+      - LOG_LEVEL=DEBUG
+    restart: always   
