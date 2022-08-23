@@ -19,5 +19,6 @@ RUN pip install -r requirements.txt
 RUN mkdir -p /data/backup
 
 COPY files/app* /app/
+COPY config/* /app/
 
 CMD python ./p1-export.py
