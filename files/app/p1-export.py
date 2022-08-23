@@ -23,7 +23,7 @@ PROMETHEUS_PORT   = int(os.getenv("PROMETHEUS_PORT", "9003"))
 
 pool_frequency = int(os.getenv("POOL_FREQUENCY", "60"))
 device = os.getenv("P1_DEVICE", "/dev/ttyUSB0")
-baudrate = int(os.getenv("P1_BAUDRATE", "115200"))
+baudrate = int(os.getenv("P1_BAUDRATE", 115200))
 
 LOGFORMAT = '%(asctime)-15s %(message)s'
 
