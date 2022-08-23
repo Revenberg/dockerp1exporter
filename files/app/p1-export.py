@@ -32,11 +32,11 @@ LOG = logging.getLogger("openweathermap-export")
 
 class SmartMeter(object):
 
-    def __init__(self, port, *args, **kwargs):
+    def __init__(self, device, baudrate, *args, **kwargs):
         try:
             self.serial = serial.Serial(
-                port,
-                kwargs.get('baudrate', 115200),
+                device,
+                kwargs.get('baudrate', baudrate),
                 timeout=10,
                 bytesize=serial.SEVENBITS,
                 parity=serial.PARITY_EVEN,
