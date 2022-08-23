@@ -210,7 +210,7 @@ class AppMetrics:
 
         self.meter = SmartMeter(device, baudrate)
 
-        for record in SmartMeter._datadetails: 
+        for record in self.meter._datadetails: 
             LOG.info(record)
 
     def run_metrics_loop(self):
