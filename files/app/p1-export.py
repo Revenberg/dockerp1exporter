@@ -212,8 +212,16 @@ class AppMetrics:
         self.meter = SmartMeter(device, baudrate)
 
         for record in self.meter._datadetails: 
-            LOG.info(self.meter._datadetails[record]['value'])
 
+            LOG.info(self.meter._datadetails[record]['prometheus'])
+            LOG.info(self.meter._datadetails[record]['value'])
+            LOG.info(self.meter._datadetails[record]['OBIS reference'])
+            self.prometheus = []
+            if self.meter._datadetails[record]['prometheus'] == "Info":
+                self.prometheus[self.meter._datadetails[record]['OBIS reference']] = Info(PROMETHEUS_PREFIX + self.meter._datadetails[record]['prometheus'], self.meter._datadetails[record]['value'])
+            if self.meter._datadetails[record]['prometheus'] == "Gauge":
+                self.prometheus[self.meter._datadetails[record]['OBIS reference']] = Gauge(PROMETHEUS_PREFIX + self.meter._datadetails[record]['prometheus'], self.meter._datadetails[record]['value'])
+        
     def run_metrics_loop(self):
         """Metrics fetching loop"""
 
