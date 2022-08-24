@@ -215,13 +215,13 @@ class AppMetrics:
 
             LOG.info(record)
             LOG.info(self.meter._datadetails[record].prometheus)
-            LOG.info(record['value'])
-            LOG.info(record['OBIS reference'])
+            LOG.info(self.meter._datadetails[record].value)
+            LOG.info(self.meter._datadetails[record].OBIS_reference)
             self.prometheus = []
-            if record['prometheus'] == "Info":
-                self.prometheus[record['OBIS reference']] = Info(PROMETHEUS_PREFIX + record['prometheus'], record['value'])
-            if record['prometheus'] == "Gauge":
-                self.prometheus[record['OBIS reference']] = Gauge(PROMETHEUS_PREFIX + record['prometheus'], record['value'])
+            if self.meter._datadetails[record].prometheus == "Info":
+                self.prometheus[self.meter._datadetails[record].OBIS_reference] = Info(PROMETHEUS_PREFIX + self.meter._datadetails[record].prometheus, self.meter._datadetails[record].value)
+            if self.meter._datadetails[record].prometheus == "Gauge":
+                self.prometheus[self.meter._datadetails[record].OBIS_reference] = Gauge(PROMETHEUS_PREFIX + self.meter._datadetails[record].prometheus, self.meter._datadetails[record].value)
         
     def run_metrics_loop(self):
         """Metrics fetching loop"""
