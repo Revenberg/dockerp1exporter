@@ -214,6 +214,8 @@ class AppMetrics:
         for record in self.meter._datadetails: 
 
             LOG.info(record)
+            LOG.info(self.meter._datadetails[record])
+            print(self.meter._datadetails[record])
             LOG.info(self.meter._datadetails[record].prometheus)
             LOG.info(self.meter._datadetails[record].value)
             LOG.info(self.meter._datadetails[record].OBIS_reference)
