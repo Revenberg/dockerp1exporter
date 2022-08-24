@@ -219,7 +219,7 @@ class AppMetrics:
             LOG.info(self.meter._datadetails[record]['prometheus'])
             LOG.info(self.meter._datadetails[record]['value'])
             LOG.info(self.meter._datadetails[record]['OBIS_reference'])
-            self.prometheus = []
+            self.prometheus = {}
             if self.meter._datadetails[record]['prometheus'] == "Info":
                 self.prometheus[self.meter._datadetails[record]['OBIS_reference']] = Info(PROMETHEUS_PREFIX + self.meter._datadetails[record]['prometheus'], self.meter._datadetails[record]['value'])
             if self.meter._datadetails[record]['prometheus'] == "Gauge":
