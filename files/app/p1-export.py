@@ -213,14 +213,14 @@ class AppMetrics:
 
         for record in self.meter._datadetails: 
 
-            LOG.info(self.meter._datadetails[record]['prometheus'])
-            LOG.info(self.meter._datadetails[record]['value'])
-            LOG.info(self.meter._datadetails[record]['OBIS reference'])
+            LOG.info(record['prometheus'])
+            LOG.info(record['value'])
+            LOG.info(record['OBIS reference'])
             self.prometheus = []
-            if self.meter._datadetails[record]['prometheus'] == "Info":
-                self.prometheus[self.meter._datadetails[record]['OBIS reference']] = Info(PROMETHEUS_PREFIX + self.meter._datadetails[record]['prometheus'], self.meter._datadetails[record]['value'])
-            if self.meter._datadetails[record]['prometheus'] == "Gauge":
-                self.prometheus[self.meter._datadetails[record]['OBIS reference']] = Gauge(PROMETHEUS_PREFIX + self.meter._datadetails[record]['prometheus'], self.meter._datadetails[record]['value'])
+            if record['prometheus'] == "Info":
+                self.prometheus[record['OBIS reference']] = Info(PROMETHEUS_PREFIX + record['prometheus'], record['value'])
+            if record['prometheus'] == "Gauge":
+                self.prometheus[record['OBIS reference']] = Gauge(PROMETHEUS_PREFIX + record['prometheus'], record['value'])
         
     def run_metrics_loop(self):
         """Metrics fetching loop"""
