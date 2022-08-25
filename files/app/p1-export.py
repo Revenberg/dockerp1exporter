@@ -214,7 +214,6 @@ class AppMetrics:
         self.prometheus = {}
         for record in self.meter._datadetails: 
             if 'key' in self.meter._datadetails[record]:
-                LOG.info(self.meter._datadetails[record]['key'])
                 if self.meter._datadetails[record]['prometheus'] == "Info":
                     self.prometheus[self.meter._datadetails[record]['key']] = Info(PROMETHEUS_PREFIX + self.meter._datadetails[record]['key'], self.meter._datadetails[record]['value'])
                 if self.meter._datadetails[record]['prometheus'] == "Gauge":
