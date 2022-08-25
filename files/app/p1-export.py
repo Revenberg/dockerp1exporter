@@ -221,9 +221,9 @@ class AppMetrics:
             LOG.info(self.meter._datadetails[record]['OBIS_reference'])
             self.prometheus = {}
             if self.meter._datadetails[record]['prometheus'] == "Info":
-                self.prometheus[self.meter._datadetails[record]['OBIS_reference']] = Info(PROMETHEUS_PREFIX + self.meter._datadetails[record]['value'], self.meter._datadetails[record]['value'])
+                self.prometheus[self.meter._datadetails[record]['OBIS_reference']] = Info(PROMETHEUS_PREFIX + record, self.meter._datadetails[record]['value'])
             if self.meter._datadetails[record]['prometheus'] == "Gauge":
-                self.prometheus[self.meter._datadetails[record]['OBIS_reference']] = Gauge(PROMETHEUS_PREFIX + self.meter._datadetails[record]['value'], self.meter._datadetails[record]['value'])
+                self.prometheus[self.meter._datadetails[record]['OBIS_reference']] = Gauge(PROMETHEUS_PREFIX + record, self.meter._datadetails[record]['value'])
         
     def run_metrics_loop(self):
         """Metrics fetching loop"""
