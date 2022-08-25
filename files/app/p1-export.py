@@ -211,6 +211,7 @@ class AppMetrics:
 
         self.meter = SmartMeter(device, baudrate)
 
+        self.prometheus = {}
         for record in self.meter._datadetails: 
 
             LOG.info(record)
@@ -219,8 +220,8 @@ class AppMetrics:
             LOG.info(self.meter._datadetails[record]['prometheus'])
             LOG.info(self.meter._datadetails[record]['value'])
             LOG.info(self.meter._datadetails[record]['OBIS_reference'])
-            self.prometheus = {}
             if 'key' in self.meter._datadetails[record]:
+                LOG.info(self.meter._datadetails[record]['key'])
                 if self.meter._datadetails[record]['prometheus'] == "Info":
                     self.prometheus[self.meter._datadetails[record]['key']] = Info(PROMETHEUS_PREFIX + record, self.meter._datadetails[record]['value'])
                 if self.meter._datadetails[record]['prometheus'] == "Gauge":
