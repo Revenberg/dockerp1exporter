@@ -223,13 +223,13 @@ class AppMetrics:
             if 'key' in self.meter._datadetails[record]:
                 LOG.info(self.meter._datadetails[record]['key'])
                 if self.meter._datadetails[record]['prometheus'] == "Info":
-                    self.prometheus[self.meter._datadetails[record]['key']] = Info(PROMETHEUS_PREFIX + record, self.meter._datadetails[record]['value'])
+                    self.prometheus[self.meter._datadetails[record]['key']] = Info(PROMETHEUS_PREFIX + self.meter._datadetails[record]['key'], self.meter._datadetails[record]['value'])
                 if self.meter._datadetails[record]['prometheus'] == "Gauge":
                     LOG.info("===========")
                     LOG.info(self.meter._datadetails[record]['key'])
                     LOG.info(record)
                     LOG.info(self.meter._datadetails[record]['value'])
-                    self.prometheus[self.meter._datadetails[record]['key']] = Gauge(PROMETHEUS_PREFIX + record, self.meter._datadetails[record]['value'])
+                    self.prometheus[self.meter._datadetails[record]['key']] = Gauge(PROMETHEUS_PREFIX + self.meter._datadetails[record]['key'], self.meter._datadetails[record]['value'])
         
     def run_metrics_loop(self):
         """Metrics fetching loop"""
