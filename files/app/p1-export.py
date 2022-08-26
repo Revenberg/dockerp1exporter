@@ -126,34 +126,34 @@ class P1Prometheus(object):
             LOG.info(key)
             if key in self.datadetails:
                 LOG.info("found")
-                if 'key' in self.datadetails[key]:
-                    LOG.info("found: " + key + " = " + match[1].decode("utf-8") + " : "+ self.datadetails[key]['value'])
+                if 'fieldname' in self.datadetails[fieldname]:
+                    LOG.info("found: " + key + " = " + match[1].decode("utf-8") + " : "+ self.datadetails[fieldname]['value'])
 
-                    fieldname = self.datadetails[key]['fieldname']
-                    prometheus = self.datadetails[key]['prometheus']
-                    source = self.datadetails[key]['source']
-                    description = self.datadetails[key]['description']
+                    fieldname = self.datadetails[fieldname]['fieldname']
+                    prometheus = self.datadetails[fieldname]['prometheus']
+                    source = self.datadetails[fieldname]['source']
+                    description = self.datadetails[fieldname]['description']
 
                     value = match[1].decode("utf-8")
                     splitted = value.split("(")
                     if len(splitted) > 1:
                         value = splitted[1]
 
-                    if 'unit' in self.datadetails[key]:
-                        value = value.replace(self.datadetails[key]['unit'], "")
+                    if 'unit' in self.datadetails[fieldname]:
+                        value = value.replace(self.datadetails[fieldname]['unit'], "")
 
-                    if 'type' in self.datadetails[key]:
-                        if self.datadetails[key]['type'] == "float":
+                    if 'type' in self.datadetails[fieldname]:
+                        if self.datadetails[fieldname]['type'] == "float":
                             value = float(value)
-                    if 'calculate' in self.datadetails[key]:
-                        for cal in self.datadetails[key]["calculate"]:
+                    if 'calculate' in self.datadetails[fieldname]:
+                        for cal in self.datadetails[fieldname]["calculate"]:
                             if cal not in self._keys:
                                 self._keys[cal] = 0
 
-                            if self.datadetails[key]["calculate"][cal] == "add":
+                            if self.datadetails[fieldname]["calculate"][cal] == "add":
                                 self._keys[cal] = self._keys[cal] + value
 
-                            if self.datadetails[key]["calculate"][cal] == "minus":
+                            if self.datadetails[fieldname]["calculate"][cal] == "minus":
                                 self._keys[cal] = self._keys[cal] - value
 
                         LOG.info(self._keys[cal])
