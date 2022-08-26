@@ -97,8 +97,11 @@ class P1Prometheus(object):
 
             # TODO: build in some protection for infinite loops
 
+        LOG.info("validate")
         self.validate(datagram)       
+        LOG.info("split")
         self.split( datagram)
+        LOG.info("done")
 
     def validate(self, datagram):
         pattern = re.compile(b'\r\n(?=!)')
