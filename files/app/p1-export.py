@@ -121,9 +121,9 @@ class P1Prometheus(object):
         LOG.info(datagram)
         self._keys = {}
         pattern = re.compile(b'(.*?)\\((.*?)\\)\r\n')        
-        for match in pattern.findall(datagram):
-            LOG.info("key")
+        for match in pattern.findall(datagram):            
             key = match[0].decode("utf-8")
+            LOG.info(key)
             if key in self.datadetails:
                 if 'key' in self.datadetails[key]:
                     LOG.info("found: " + key + " = " + match[1].decode("utf-8") + " : "+ self.datadetails[key]['value'])
