@@ -251,8 +251,10 @@ class AppMetrics:
             self.gas_value['value'] = values._keys["GAS_READING"]['value']
 
         for k, v in values._keys.items():
+            LOG.info("--------------------")
             LOG.info(k)
             LOG.info(v)
+            LOG.info(v['value'])
             LOG.info(v['prometheus'])
 
             if v['prometheus'] == "Info":
