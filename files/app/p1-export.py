@@ -245,10 +245,9 @@ class AppMetrics:
             
             if self.gas_value > 0:
                 if values._keys["GAS_READING"]['value'] > 0:
-                    values._keys["GAS_DELTA"] = { 'fieldname': 'GAS_DELTA', 'prometheus': 'Gauge', 'value': values._keys["GAS_READING"] - self.gas_value, 'source': 'calculated' }
-                        
+                    values._keys["GAS_DELTA"] = { 'fieldname': 'GAS_DELTA', 'prometheus': 'Gauge', 'value': values._keys["GAS_READING"] - self.gas_value, 'source': 'calculated' }                       
 
-            self.gas_value['value'] = values._keys["GAS_READING"]['value']
+            self.gas_value = values._keys["GAS_READING"]['value']
 
         for k, v in values._keys.items():
             LOG.info("--------------------")
