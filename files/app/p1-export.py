@@ -126,21 +126,21 @@ class P1Prometheus(object):
             LOG.info(key)
             if key in self.datadetails:
                 LOG.info("found")
-                if 'fieldname' in self.datadetails[fieldname]:
-                    LOG.info("found: " + key + " = " + match[1].decode("utf-8") + " : "+ self.datadetails[fieldname]['value'])
+                if 'fieldname' in self.datadetails[key]:
+                    LOG.info("found: " + key + " = " + match[1].decode("utf-8") + " : "+ self.datadetails[key]['description'])
 
-                    fieldname = self.datadetails[fieldname]['fieldname']
-                    prometheus = self.datadetails[fieldname]['prometheus']
-                    source = self.datadetails[fieldname]['source']
-                    description = self.datadetails[fieldname]['description']
+                    fieldname = self.datadetails[key]['fieldname']
+                    prometheus = self.datadetails[key]['prometheus']
+                    source = self.datadetails[key]['source']
+                    description = self.datadetails[key]['description']
 
                     value = match[1].decode("utf-8")
                     splitted = value.split("(")
                     if len(splitted) > 1:
                         value = splitted[1]
 
-                    if 'unit' in self.datadetails[fieldname]:
-                        value = value.replace(self.datadetails[fieldname]['unit'], "")
+                    if 'unit' in self.datadetails[key]:
+                        value = value.replace(self.datadetails[key]['unit'], "")
 
                     if 'type' in self.datadetails[fieldname]:
                         if self.datadetails[fieldname]['type'] == "float":
