@@ -18,7 +18,7 @@ crc16 = crcmod.predefined.mkPredefinedCrcFun('crc16')
 
 LOG_LEVEL = os.getenv("LOG_LEVEL", "WARN")
 
-PROMETHEUS_PREFIX = os.getenv("PROMETHEUS_PREFIX", "openweathermap")
+PROMETHEUS_PREFIX = os.getenv("PROMETHEUS_PREFIX", "p1")
 PROMETHEUS_PORT   = int(os.getenv("PROMETHEUS_PORT", "9003"))
 
 pool_frequency = int(os.getenv("POOL_FREQUENCY", "60"))
@@ -28,11 +28,17 @@ baudrate = int(os.getenv("P1_BAUDRATE", 115200))
 LOGFORMAT = '%(asctime)-15s %(message)s'
 
 logging.basicConfig(level=LOG_LEVEL, format=LOGFORMAT)
-LOG = logging.getLogger("openweathermap-export")
+LOG = logging.getLogger("p1-export")
 
-class SmartMeter(object):
+class P1Prometheus(object):
+    PROMETHEUS_PREFIX = ''
+    datadetails = {}
+    gas_value = 0    
+    _prometheus = {}
+    _keys = {}
 
-    def __init__(self, device, baudrate, *args, **kwargs):
+    def __init__(self, device, baudrate, PROMETHEUS_PREFIX, *args, **kwargs):
+        self.PROMETHEUS_PREFIX = PROMETHEUS_PREFIX
         try:
             self.serial = serial.Serial(
                 device,
@@ -43,13 +49,13 @@ class SmartMeter(object):
                 stopbits=serial.STOPBITS_ONE
             )
         except (serial.SerialException,OSError) as e:
-            raise SmartMeterError(e)
+            raise P1PrometheusError(e)
         else:
             self.serial.setRTS(False)
             self.port = self.serial.name
 
         f = open('p1.json', "r")
-        self._datadetails = json.load(f)
+        self.self.datadetails = json.load(f)
         f.close()
 
     def connect(self):
@@ -75,7 +81,7 @@ class SmartMeter(object):
             try:
                 line = self.serial.readline()
             except Exception as e:
-                raise SmartMeterError(e)
+                raise P1PrometheusError(e)
 
             lines_read += 1
 
@@ -91,58 +97,14 @@ class SmartMeter(object):
 
             # TODO: build in some protection for infinite loops
 
-        return P1Packet(self._datadetails, datagram)
+        self.validate(datagram)       
+        self.split( datagram)
 
-class SmartMeterError(Exception):
-    pass
-
-class P1PacketError(Exception):
-    pass
-
-class P1Packet(object):
-    _datagram = ''
-    _datadetails = None
-    _keys = {}
-
-    def __init__(self, _datadetails, datagram):
-        self._datadetails =_datadetails
-        self._datagram = datagram
-
-        self.validate()
-        self.split()
-
-    def getItems(self):
-        return self.self._keys
-
-    def __getitem__(self, key):
-        return self.self._keys[key]
-
-
-    def get_float(self, regex, default=None):
-        result = self.get(regex, None)
-        if not result:
-            return default
-        return float(self.get(regex, default))
-
-    def get_int(self, regex, default=None):
-        result = self.get(regex, None)
-        if not result:
-            return default
-        return int(result)
-
-
-    def get(self, regex, default=None):
-        results = re.search(regex, self._datagram, re.MULTILINE)
-        if not results:
-            return default
-        return results.group(1).decode('ascii')
-
-
-    def validate(self):
+    def validate(self, datagram):
         pattern = re.compile(b'\r\n(?=!)')
-        for match in pattern.finditer(self._datagram):
-            packet = self._datagram[:match.end() + 1]
-            checksum = self._datagram[match.end() + 1:]
+        for match in pattern.finditer(datagram):
+            packet = datagram[:match.end() + 1]
+            checksum = datagram[match.end() + 1:]
 
         if checksum.strip():
             given_checksum = int('0x' + checksum.decode('ascii').strip(), 16)
@@ -151,80 +113,87 @@ class P1Packet(object):
             if given_checksum != calculated_checksum:
                 raise P1PacketError('P1Packet with invalid checksum found')
 
-    def split(self):
+    def split(self, datagram):
         self._keys = {}
         pattern = re.compile(b'(.*?)\\((.*?)\\)\r\n')
-        for match in pattern.findall(self._datagram):
+        for match in pattern.findall(datagram):
             key = match[0].decode("utf-8")
-            if key in self._datadetails:
-                if 'key' in self._datadetails[key]:
-                    LOG.info("found: " + key + " = " + match[1].decode("utf-8") + " : "+ self._datadetails[key]['value'])
+            if key in self.datadetails:
+                if 'key' in self.datadetails[key]:
+                    LOG.info("found: " + key + " = " + match[1].decode("utf-8") + " : "+ self.datadetails[key]['value'])
 
-                    fieldname = self._datadetails[key]['key']
-                    prometheus = self._datadetails[key]['prometheus']
-                    source = self._datadetails[key]['source']
+                    fieldname = self.datadetails[key]['fieldname']
+                    prometheus = self.datadetails[key]['prometheus']
+                    source = self.datadetails[key]['source']
+                    description = self.datadetails[key]['description']
 
                     value = match[1].decode("utf-8")
                     splitted = value.split("(")
                     if len(splitted) > 1:
                         value = splitted[1]
 
-                    if 'unit' in self._datadetails[key]:
-                        value = value.replace(self._datadetails[key]['unit'], "")
+                    if 'unit' in self.datadetails[key]:
+                        value = value.replace(self.datadetails[key]['unit'], "")
 
-                    if 'type' in self._datadetails[key]:
-                        if self._datadetails[key]['type'] == "float":
+                    if 'type' in self.datadetails[key]:
+                        if self.datadetails[key]['type'] == "float":
                             value = float(value)
-                    if 'calculate' in self._datadetails[key]:
-                        for cal in self._datadetails[key]["calculate"]:
+                    if 'calculate' in self.datadetails[key]:
+                        for cal in self.datadetails[key]["calculate"]:
                             if cal not in self._keys:
                                 self._keys[cal] = 0
 
-                            if self._datadetails[key]["calculate"][cal] == "add":
+                            if self.datadetails[key]["calculate"][cal] == "add":
                                 self._keys[cal] = self._keys[cal] + value
 
-                            if self._datadetails[key]["calculate"][cal] == "minus":
+                            if self.datadetails[key]["calculate"][cal] == "minus":
                                 self._keys[cal] = self._keys[cal] - value
 
                         LOG.info(self._keys[cal])
-
-                    LOG.info(fieldname)
+               
+                    LOG.info(fieldname)                    
                     LOG.info(prometheus)
+                    LOG.info(description)
                     LOG.info(value)
                     LOG.info(source)
-                    self._keys[fieldname] = { 'fieldname': fieldname, 'prometheus': prometheus, 'value': value, 'source': source }
+
+                    if fieldname == ["GAS_READING"]:
+                        if self.gas_value > 0:
+                            if value > 0:
+                                fieldname = "GAS_DELTA"
+                                value = value - self.gas_value
+                        self.gas_value = value
+
+                    if not fieldname in prometheus:
+                        if prometheus == "Info":
+                            prometheus[fieldname] = Info(self.PROMETHEUS_PREFIX + fieldname, description)
+                        if prometheus == "Gauge":
+                            prometheus[fieldname] = Gauge(self.PROMETHEUS_PREFIX + fieldname, description)                           
+
+                    if fieldname in prometheus:
+                        if prometheus == "Info":
+                            prometheus[fieldname].info(value)
+                        if prometheus == "Gauge":
+                            prometheus[fieldname].set(value)                    
             else:
                 LOG.warn("not found: " + key + " = " + match[1].decode("utf-8"))
 
-    def __str__(self):
-        return self._datagram.decode('ascii')
+class P1PrometheusError(Exception):
+    pass
+
+class P1PacketError(Exception):
+    pass
 
 class AppMetrics:
+    pool_frequency = 5
     """
     Representation of Prometheus metrics and loop to fetch and transform
     application metrics into Prometheus metrics.
     """
 
     def __init__(self, PROMETHEUS_PREFIX='', pool_frequency=5, device='/dev/ttyUSB0', baudrate=115200):
-        self.gas_value=0
-        if PROMETHEUS_PREFIX != '':
-            PROMETHEUS_PREFIX = PROMETHEUS_PREFIX + "_"
-
-        self.PROMETHEUS_PREFIX = PROMETHEUS_PREFIX
         self.pool_frequency = pool_frequency
-
-        self.meter = SmartMeter(device, baudrate)
-
-        self.prometheus = {}
-        
-        self.prometheus['GAS_DELTA'] = Gauge(PROMETHEUS_PREFIX + 'GAS_DELTA', 'Calculated GAS delta')
-
-        for record in self.meter._datadetails: 
-            if 'key' in self.meter._datadetails[record]:
-                if self.meter._datadetails[record]['prometheus'] == "Info":
-                    self.prometheus[self.meter._datadetails[record]['key']] = Info(PROMETHEUS_PREFIX + self.meter._datadetails[record]['key'], self.meter._datadetails[record]['value'])
-                if self.meter._datadetails[record]['prometheus'] == "Gauge":
-                    self.prometheus[self.meter._datadetails[record]['key']] = Gauge(PROMETHEUS_PREFIX + self.meter._datadetails[record]['key'], self.meter._datadetails[record]['value'])
+        self.meter = P1Prometheus(device, baudrate, PROMETHEUS_PREFIX)
         
     def run_metrics_loop(self):
         """Metrics fetching loop"""
@@ -239,27 +208,7 @@ class AppMetrics:
         new values.
         """
 
-        values = self.meter.read_one_packet()
-
-        if values._keys["GAS_READING"]:
-            
-            if self.gas_value > 0:
-                if values._keys["GAS_READING"]['value'] > 0:
-                    values._keys["GAS_DELTA"] = { 'fieldname': 'GAS_DELTA', 'prometheus': 'Gauge', 'value': values._keys["GAS_READING"] - self.gas_value, 'source': 'calculated' }                       
-
-            self.gas_value = values._keys["GAS_READING"]['value']
-
-        for k, v in values._keys.items():
-            LOG.info("--------------------")
-            LOG.info(k)
-            LOG.info(values._keys[k])
-            LOG.info(values._keys[k]['value'])
-            LOG.info(values._keys[k]['prometheus'])
-
-            if v['prometheus'] == "Info":
-                self.weather_icon_name.info({ v['source']: v.value } )
-            if v['prometheus'] == "Gauge":
-                self.visibility_distance.set(v['value'])
+        self.meter.read_one_packet()
         
         LOG.info("Update prometheus")
 

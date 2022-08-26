@@ -1,29 +1,29 @@
 {
     "0-0:1.0.0": {
         "source": "Electricity",
-        "value": "Date-time stamp of the P1 message",
+        "description": "Date-time stamp of the P1 message",
         "unit": "s",
         "OBIS_reference": "0-0:1.0.0.255",
         "prometheus":"Info"
     },
     "1-3:0.2.8": {
         "source": "Electricity",
-        "value": "Version information for P1 output",
+        "description": "Version information for P1 output",
         "OBIS_reference": "1-3:0.2.8.255",
         "prometheus":"Info"
     },
     "0-0:96.1.1": {
         "source": "Electricity",
-        "value": "Equipment identifier",
+        "description": "Equipment identifier",
         "OBIS_reference": "0-0:96.1.1.255",
         "prometheus":"Info"
     },
     "1-0:1.8.1": {
         "source": "Electricity",
-        "value": "Meter Reading electricity delivered to client (low tariff) in 0,001 kWh",
+        "description": "Meter Reading electricity delivered to client (low tariff) in 0,001 kWh",
         "OBIS_reference": "1-0:1.8.1.255",
         "type": "float",
-        "key": "ELECTRICITY_DELIVERED_TO_CLIENT_LOW_TARIFF",
+        "fieldname": "ELECTRICITY_DELIVERED_TO_CLIENT_LOW_TARIFF",
         "unit": "*kWh",
         "calculate": {
             "ELECTRICITY_DELIVERED_TO": "add",
@@ -33,10 +33,10 @@
     },
     "1-0:1.8.2": {
         "source": "Electricity",
-        "value": "Meter Reading electricity delivered to client (normal tariff) in 0,001 kWh",
+        "description": "Meter Reading electricity delivered to client (normal tariff) in 0,001 kWh",
         "OBIS_reference": "1-0:1.8.2.255",
         "type": "float",
-        "key": "ELECTRICITY_DELIVERED_TO_CLIENT_NORMAL_TARIFF",
+        "fieldname": "ELECTRICITY_DELIVERED_TO_CLIENT_NORMAL_TARIFF",
         "unit": "*kWh",
         "calculate": {
             "ELECTRICITY_DELIVERED_TO": "add",
@@ -46,10 +46,10 @@
     },
     "1-0:2.8.1": {
         "source": "Electricity",
-        "value": "Meter Reading electricity delivered by client (low tariff) in 0,001 kWh",
+        "description": "Meter Reading electricity delivered by client (low tariff) in 0,001 kWh",
         "OBIS_reference": "1-0:2.8.1.255",
         "type": "float",
-        "key": "ELECTRICITY_DELIVERED_BY_CLIENT_LOW_TARIFF",
+        "fieldname": "ELECTRICITY_DELIVERED_BY_CLIENT_LOW_TARIFF",
         "unit": "*kWh",
         "calculate": {
             "ELECTRICITY_DELIVERED_BY": "add",
@@ -59,10 +59,10 @@
     },
     "1-0:2.8.2": {
         "source": "Electricity",
-        "value": "Meter Reading electricity delivered by client (normal tariff) in 0,001 kWh",
+        "description": "Meter Reading electricity delivered by client (normal tariff) in 0,001 kWh",
         "OBIS_reference": "1-0:2.8.2.255",
         "type": "float",
-        "key": "ELECTRICITY_DELIVERED_BY_CLIENT_NORMAL_TARIFF",
+        "fieldname": "ELECTRICITY_DELIVERED_BY_CLIENT_NORMAL_TARIFF",
         "unit": "*kWh",
         "calculate": {
             "ELECTRICITY_DELIVERED_BY": "add",
@@ -72,18 +72,18 @@
     },
     "0-0:96.14.0": {
         "source": "Electricity",
-        "value": "Tariff indicator electricity. The tariff indicator can be used to switch tariff dependent loads e.g boilers. This is responsibility of the P1 user",
+        "description": "Tariff indicator electricity. The tariff indicator can be used to switch tariff dependent loads e.g boilers. This is responsibility of the P1 user",
         "OBIS_reference": "0-0:96.14.0.255",
         "type": "float",
-        "key": "DN",
+        "fieldname": "DN",
         "prometheus": "Gauge"
     },
     "1-0:1.7.0": {
         "source": "Electricity",
-        "value": "Actual electricity power delivered (+P) in 1 Watt resolution",
+        "description": "Actual electricity power delivered (+P) in 1 Watt resolution",
         "OBIS_reference": "1-0:1.7.0.255",
         "type": "float",
-        "key": "ACTUAL_ELECTRICITY_POWER_DELIVERED",
+        "fieldname": "ACTUAL_ELECTRICITY_POWER_DELIVERED",
         "unit": "*kW",
         "calculate": {
             "SUM_ELECTRICITY": "add"
@@ -92,10 +92,10 @@
     },
     "1-0:2.7.0": {
         "source": "Electricity",
-        "value": "Actual electricity power received (-P) in 1 Watt resolution",
+        "description": "Actual electricity power received (-P) in 1 Watt resolution",
         "OBIS_reference": "1-0:2.7.0.255",
         "type": "float",
-        "key": "ACTUAL_ELECTRICITY_POWER_RECEIVED",
+        "fieldname": "ACTUAL_ELECTRICITY_POWER_RECEIVED",
         "unit": "*kW",
         "calculate": {
             "SUM_ELECTRICITY": "minus"
@@ -104,125 +104,125 @@
     },
     "0-0:96.7.21": {
         "source": "Electricity",
-        "value": "Number of power failures in any phases",
+        "description": "Number of power failures in any phases",
         "OBIS_reference": "0-0:96.7.21.255",
         "type": "float",
-        "key": "POWER_FAILURE_COUNT",
+        "fieldname": "POWER_FAILURE_COUNT",
         "prometheus": "Gauge"
     },
     "0-0:96.7.9": {
         "source": "Electricity",
-        "value": "Number of long power failures in any phases",
+        "description": "Number of long power failures in any phases",
         "OBIS_reference": "0-0:96.7.9.255",
         "type": "float",
-        "key": "LONG_POWER_FAILURE_COUNT",
+        "fieldname": "LONG_POWER_FAILURE_COUNT",
         "prometheus": "Gauge"
     },
     "1-0:99.97.0": {
         "source": "Electricity",
-        "value": "Power failure event log",
+        "description": "Power failure event log",
         "OBIS_reference": "1-0:99.97.0.255",
         "prometheus": "Gauge"
     },
     "1-0:32.32.0": {
         "source": "Electricity",
-        "value": "Number of voltage sags in phase L1",
+        "description": "Number of voltage sags in phase L1",
         "OBIS_reference": "1-0:32.32.0.255",
         "type": "float",
-        "key": "VOLTAGE_SAG_L1_COUNT",
+        "fieldname": "VOLTAGE_SAG_L1_COUNT",
         "prometheus": "Gauge"
     },
     "1-0:52.32.0": {
         "source": "Electricity",
-        "value": "Number of voltage sags in phase L2",
+        "description": "Number of voltage sags in phase L2",
         "OBIS_reference": "1-0:52.32.0.255",
         "type": "float",
-        "key": "VOLTAGE_SAG_L2_COUNT",
+        "fieldname": "VOLTAGE_SAG_L2_COUNT",
         "prometheus": "Gauge"
     },
     "1-0:72.32.0": {
         "source": "Electricity",
-        "value": "Number of voltage sags in phase L3",
+        "description": "Number of voltage sags in phase L3",
         "OBIS_reference": "1-0:72.32.0.255",
         "type": "float",
-        "key": "VOLTAGE_SAG_L3_COUNT",
+        "fieldname": "VOLTAGE_SAG_L3_COUNT",
         "prometheus": "Gauge"
     },
     "1-0:32.36.0": {
         "source": "Electricity",
-        "value": "Number of voltage swells in phase L1",
+        "description": "Number of voltage swells in phase L1",
         "OBIS_reference": "1-0:32.36.0.255",
         "type": "float",
-        "key": "VOLTAGE_SWELL_L1_COUNT",
+        "fieldname": "VOLTAGE_SWELL_L1_COUNT",
         "prometheus": "Gauge"
     },
     "1-0:52.36.0": {
         "source": "Electricity",
-        "value": "Number of voltage swells in phase L2",
+        "description": "Number of voltage swells in phase L2",
         "OBIS_reference": "1-0:52.36.0.255",
         "type": "float",
-        "key": "VOLTAGE_SWELL_L2_COUNT",
+        "fieldname": "VOLTAGE_SWELL_L2_COUNT",
         "prometheus": "Gauge"
     },
     "1-0:72.36.0": {
         "source": "Electricity",
-        "value": "Number of voltage swells in phase L3",
+        "description": "Number of voltage swells in phase L3",
         "OBIS_reference": "1-0:72.36.0.255",
         "type": "float",
-        "key": "VOLTAGE_SWELL_L3_COUNT",
+        "fieldname": "VOLTAGE_SWELL_L3_COUNT",
         "prometheus": "Gauge"
     },
     "1-0:32.7.0": {
         "source": "Electricity",
-        "value": "Instantaneous voltage L1",
+        "description": "Instantaneous voltage L1",
         "OBIS_reference": "1-0:32.7.0.255",
         "prometheus": "Gauge"
     },
     "1-0:52.7.0": {
         "source": "Electricity",
-        "value": "Instantaneous voltage L2",
+        "description": "Instantaneous voltage L2",
         "OBIS_reference": "1-0:52.7.0.255",
         "prometheus": "Gauge"
     },
     "1-0:72.7.0": {
         "source": "Electricity",
-        "value": "Instantaneous voltage L3",
+        "description": "Instantaneous voltage L3",
         "OBIS_reference": "1-0:72.7.0.255",
         "prometheus": "Gauge"
     },
     "1-0:31.7.0": {
         "source": "Electricity",
-        "value": "Instantaneous current L1",
+        "description": "Instantaneous current L1",
         "OBIS_reference": "1-0:31.7.0.255",
         "type": "float",
-        "key": "INSTANTANEOUS_ACTIVECURRENT_L1",
+        "fieldname": "INSTANTANEOUS_ACTIVECURRENT_L1",
         "unit": "*A",
         "prometheus": "Gauge"
     },
     "1-0:51.7.0": {
         "source": "Electricity",
-        "value": "Instantaneous current L2",
+        "description": "Instantaneous current L2",
         "OBIS_reference": "1-0:51.7.0.255",
         "type": "float",
-        "key": "INSTANTANEOUS_ACTIVECURRENT_L2",
+        "fieldname": "INSTANTANEOUS_ACTIVECURRENT_L2",
         "unit": "*A",
         "prometheus": "Gauge"
     },
     "1-0:71.7.0": {
         "source": "Electricity",
-        "value": "Instantaneous current L3",
+        "description": "Instantaneous current L3",
         "OBIS_reference": "1-0:71.7.0.255",
         "type": "float",
-        "key": "INSTANTANEOUS_ACTIVECURRENT_L3",
+        "fieldname": "INSTANTANEOUS_ACTIVECURRENT_L3",
         "unit": "*A"     ,
         "prometheus": "Gauge"   
     },
     "1-0:21.7.0": {
         "source": "Electricity",
-        "value": "Instantaneous active power L1 (+P)",
+        "description": "Instantaneous active power L1 (+P)",
         "OBIS_reference": "1-0:21.7.0.255",
         "type": "float",
-        "key": "INSTANTANEOUS_ACTIVE_POWER_L1_CONSUMED",
+        "fieldname": "INSTANTANEOUS_ACTIVE_POWER_L1_CONSUMED",
         "unit": "*kW",
         "calculate": {
             "INSTANTANEOUS_ACTIVE_POWER_CONSUMED": "add",
@@ -232,10 +232,10 @@
     },
     "1-0:41.7.0": {
         "source": "Electricity",
-        "value": "Instantaneous active power L2 (+P)",
+        "description": "Instantaneous active power L2 (+P)",
         "OBIS_reference": "1-0:41.7.0.255",
         "type": "float",
-        "key": "INSTANTANEOUS_ACTIVE_POWER_L2_CONSUMED",
+        "fieldname": "INSTANTANEOUS_ACTIVE_POWER_L2_CONSUMED",
         "unit": "*kW",
         "calculate": {
             "INSTANTANEOUS_ACTIVE_POWER_CONSUMED": "add",
@@ -245,10 +245,10 @@
     },
     "1-0:61.7.0": {
         "source": "Electricity",
-        "value": "Instantaneous active power L3 (+P)",
+        "description": "Instantaneous active power L3 (+P)",
         "OBIS_reference": "1-0:61.7.0.255",
         "type": "float",
-        "key": "INSTANTANEOUS_ACTIVE_POWER_L3_CONSUMED",
+        "fieldname": "INSTANTANEOUS_ACTIVE_POWER_L3_CONSUMED",
         "unit": "*kW",
         "calculate": {
             "INSTANTANEOUS_ACTIVE_POWER_CONSUMED": "add",
@@ -258,10 +258,10 @@
     },
     "1-0:22.7.0": {
         "source": "Electricity",
-        "value": "Instantaneous active power L1 (-P)",
+        "description": "Instantaneous active power L1 (-P)",
         "OBIS_reference": "1-0:22.7.0.255",
         "type": "float",
-        "key": "INSTANTANEOUS_ACTIVE_POWER_L1_DELIVERED",
+        "fieldname": "INSTANTANEOUS_ACTIVE_POWER_L1_DELIVERED",
         "unit": "*kW",
         "calculate": {
             "INSTANTANEOUS_ACTIVE_POWER_DELIVERED": "add",
@@ -271,10 +271,10 @@
     },
     "1-0:42.7.0": {
         "source": "Electricity",
-        "value": "Instantaneous active power L2 (-P)",
+        "description": "Instantaneous active power L2 (-P)",
         "OBIS_reference": "1-0:42.7.0.255",
         "type": "float",
-        "key": "INSTANTANEOUS_ACTIVE_POWER_L2_DELIVERED",
+        "fieldname": "INSTANTANEOUS_ACTIVE_POWER_L2_DELIVERED",
         "unit": "*kW",
         "calculate": {
             "INSTANTANEOUS_ACTIVE_POWER_DELIVERED": "add",
@@ -284,10 +284,10 @@
     },
     "1-0:62.7.0": {
         "source": "Electricity",
-        "value": "Instantaneous active power L3 (-P)",
+        "description": "Instantaneous active power L3 (-P)",
         "OBIS_reference": "1-0:62.7.0.255",
         "type": "float",
-        "key": "INSTANTANEOUS_ACTIVE_POWER_L3_DELIVERED",
+        "fieldname": "INSTANTANEOUS_ACTIVE_POWER_L3_DELIVERED",
         "unit": "*kW",
         "calculate": {
             "INSTANTANEOUS_ACTIVE_POWER_DELIVERED": "add",
@@ -297,37 +297,37 @@
     },
     "0-0:96.13.1": {
         "source": "Electricity",
-        "value": "Text message codes: numeric 8 digits",
+        "description": "Text message codes: numeric 8 digits",
         "OBIS_reference": "0-0:96.13.1.255",
         "prometheus": "Info"
     },
     "0-0:96.13.0": {
         "source": "Electricity",
-        "value": "Text message max 1024 characters",
+        "description": "Text message max 1024 characters",
         "OBIS_reference": "0-0:96.13.0.255",
         "prometheus": "Info"
     },
     "0-1:24.1.0": {
         "source": "Gas",
-        "value": "Device-Type",
+        "description": "Device-Type",
         "OBIS_reference": "0-n:24.1.0.255",
         "type": "float",
-        "key": "GAS",
+        "fieldname": "GAS",
         "unit": "*m3",
         "prometheus": "Gauge"
     },
     "0-1:96.1.0": {
         "source": "Gas",
-        "value": "Equipment identifier",
+        "description": "Equipment identifier",
         "OBIS_reference": "0-n:96.1.0.255",
         "prometheus": "Info"
     },
     "0-1:24.2.1": {
         "source": "Gas",
-        "value": "Last 5-minute value (temperature converted), gas delivered to client in m3, including decimal values and capture time",
+        "description": "Last 5-minute value (temperature converted), gas delivered to client in m3, including decimal values and capture time",
         "OBIS_reference": "0-n:24.2.1.255",
         "type": "float",
-        "key": "GAS_READING",
+        "fieldname": "GAS_READING",
         "unit": "*m3",
         "prometheus": "Gauge"
     }
