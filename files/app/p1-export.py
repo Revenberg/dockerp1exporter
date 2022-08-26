@@ -142,18 +142,18 @@ class P1Prometheus(object):
                     if 'unit' in self.datadetails[key]:
                         value = value.replace(self.datadetails[key]['unit'], "")
 
-                    if 'type' in self.datadetails[fieldname]:
-                        if self.datadetails[fieldname]['type'] == "float":
+                    if 'type' in self.datadetails[key]:
+                        if self.datadetails[key]['type'] == "float":
                             value = float(value)
-                    if 'calculate' in self.datadetails[fieldname]:
-                        for cal in self.datadetails[fieldname]["calculate"]:
+                    if 'calculate' in self.datadetails[key]:
+                        for cal in self.datadetails[key]["calculate"]:
                             if cal not in self._keys:
                                 self._keys[cal] = 0
 
-                            if self.datadetails[fieldname]["calculate"][cal] == "add":
+                            if self.datadetails[key]["calculate"][cal] == "add":
                                 self._keys[cal] = self._keys[cal] + value
 
-                            if self.datadetails[fieldname]["calculate"][cal] == "minus":
+                            if self.datadetails[key]["calculate"][cal] == "minus":
                                 self._keys[cal] = self._keys[cal] - value
 
                         LOG.info(self._keys[cal])
@@ -173,15 +173,15 @@ class P1Prometheus(object):
 
                     if not fieldname in prometheus:
                         if prometheus == "Info":
-                            prometheus[fieldname] = Info(self.PROMETHEUS_PREFIX + fieldname, description)
+                            prometheus[key] = Info(self.PROMETHEUS_PREFIX + fieldname, description)
                         if prometheus == "Gauge":
-                            prometheus[fieldname] = Gauge(self.PROMETHEUS_PREFIX + fieldname, description)                           
+                            prometheus[key] = Gauge(self.PROMETHEUS_PREFIX + fieldname, description)                           
 
                     if fieldname in prometheus:
                         if prometheus == "Info":
-                            prometheus[fieldname].info(value)
+                            prometheus[key].info(value)
                         if prometheus == "Gauge":
-                            prometheus[fieldname].set(value)                    
+                            prometheus[key].set(value)                    
             else:
                 LOG.warn("not found: " + key + " = " + match[1].decode("utf-8"))
 
