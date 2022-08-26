@@ -172,11 +172,12 @@ class P1Prometheus(object):
 
                     if not fieldname in self._prometheus:
                         if prometheus == "Info":
-                            self._prometheus[key] = Info(self.PROMETHEUS_PREFIX + fieldname, description)
+                            self._prometheus[fieldname] = Info(self.PROMETHEUS_PREFIX + fieldname, description)
                         if prometheus == "Gauge":
-                            self._prometheus[key] = Gauge(self.PROMETHEUS_PREFIX + fieldname, description)                           
+                            self._prometheus[fieldname] = Gauge(self.PROMETHEUS_PREFIX + fieldname, description)                           
 
                     if fieldname in self._prometheus:
+                        LOG.info("in prometheus")
                         if prometheus == "Info":
                             self._prometheus[key].info(value)
                         if prometheus == "Gauge":
