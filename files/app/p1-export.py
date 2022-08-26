@@ -117,9 +117,12 @@ class P1Prometheus(object):
                 raise P1PacketError('P1Packet with invalid checksum found')
 
     def split(self, datagram):
+        LOG.info("split")
+        LOG.info(datagram)
         self._keys = {}
-        pattern = re.compile(b'(.*?)\\((.*?)\\)\r\n')
+        pattern = re.compile(b'(.*?)\\((.*?)\\)\r\n')        
         for match in pattern.findall(datagram):
+            LOG.info("key")
             key = match[0].decode("utf-8")
             if key in self.datadetails:
                 if 'key' in self.datadetails[key]:
@@ -188,13 +191,13 @@ class P1PacketError(Exception):
     pass
 
 class AppMetrics:
-    pool_frequency = 5
+    pool_frequency = 0
     """
     Representation of Prometheus metrics and loop to fetch and transform
     application metrics into Prometheus metrics.
     """
 
-    def __init__(self, PROMETHEUS_PREFIX='', pool_frequency=5, device='/dev/ttyUSB0', baudrate=115200):
+    def __init__(self, PROMETHEUS_PREFIX='', pool_frequency=60, device='/dev/ttyUSB0', baudrate=115200):
         self.pool_frequency = pool_frequency
         self.meter = P1Prometheus(device, baudrate, PROMETHEUS_PREFIX)
         
