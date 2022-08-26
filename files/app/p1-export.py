@@ -55,7 +55,7 @@ class P1Prometheus(object):
             self.port = self.serial.name
 
         f = open('p1.json', "r")
-        self.self.datadetails = json.load(f)
+        self.datadetails = json.load(f)
         f.close()
 
     def connect(self):
