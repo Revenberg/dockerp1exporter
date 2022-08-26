@@ -171,11 +171,11 @@ class P1Prometheus(object):
                                 self.p1ToPrometheus("GAS_DELTA", prometheus,"Gas delta", value - self._gas_value)
                         self._gas_value = value
 
-                    self.p1ToPrometheus(fieldname, prometheus,description, value)
+                    self.p1ToPrometheus(fieldname, prometheus,description, value, source)
             else:
                 LOG.warn("not found: " + key + " = " + match[1].decode("utf-8"))
 
-    def p1ToPrometheus(self, fieldname, prometheus, description, value):
+    def p1ToPrometheus(self, fieldname, prometheus, description, value, source):
         if not fieldname in self._prometheus:
             if prometheus == "Info":
                 self._prometheus[fieldname] = Info(self.PROMETHEUS_PREFIX + fieldname, description)
@@ -186,7 +186,7 @@ class P1Prometheus(object):
         if fieldname in self._prometheus:
             LOG.info("in prometheus")
             if prometheus == "Info":
-                self._prometheus[fieldname].info({ fieldname: value })
+                self._prometheus[fieldname].info({ source: value })
             if prometheus == "Gauge":
                 self._prometheus[fieldname].set(value)
 
