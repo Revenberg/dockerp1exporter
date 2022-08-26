@@ -243,8 +243,6 @@ class AppMetrics:
 
         for k, v in values._keys.items():
             LOG.info(k + v)
-
-        LOG.info(f"Send topic `{json_body}`")
         
 #        self.weather_icon_name.info({ 'icon': w.weather_icon_name } )
 #        self.visibility_distance.set(w.visibility_distance)
