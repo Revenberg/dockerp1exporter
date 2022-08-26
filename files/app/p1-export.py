@@ -32,7 +32,7 @@ LOG = logging.getLogger("p1-export")
 
 class P1Prometheus(object):
     PROMETHEUS_PREFIX = ''
-    __datadetails = {}
+    _datadetails = {}
     _gas_value = 0    
     _prometheus = {}
     _keys = {}
@@ -55,7 +55,7 @@ class P1Prometheus(object):
             self.port = self.serial.name
 
         f = open('p1.json', "r")
-        self.__datadetails = json.load(f)
+        self._datadetails = json.load(f)
         f.close()
 
     def connect(self):
@@ -123,29 +123,29 @@ class P1Prometheus(object):
         pattern = re.compile(b'(.*?)\\((.*?)\\)\r\n')        
         for match in pattern.findall(datagram):            
             key = match[0].decode("utf-8")
-            if key in self.__datadetails:                
-                if 'fieldname' in self.__datadetails[key]:
-                    LOG.info("found: " + key + " = " + match[1].decode("utf-8") + " : "+ self.__datadetails[key]['description'])
+            if key in self._datadetails:                
+                if 'fieldname' in self._datadetails[key]:
+                    LOG.info("found: " + key + " = " + match[1].decode("utf-8") + " : "+ self._datadetails[key]['description'])
 
-                    fieldname = self.__datadetails[key]['fieldname']
-                    prometheus = self.__datadetails[key]['prometheus']
-                    source = self.__datadetails[key]['source']
-                    description = self.__datadetails[key]['description']
+                    fieldname = self._datadetails[key]['fieldname']
+                    prometheus = self._datadetails[key]['prometheus']
+                    source = self._datadetails[key]['source']
+                    description = self._datadetails[key]['description']
 
                     value = match[1].decode("utf-8")
                     splitted = value.split("(")
                     if len(splitted) > 1:
                         value = splitted[1]
 
-                    if 'unit' in self.__datadetails[key]:
-                        value = value.replace(self.__datadetails[key]['unit'], "")
+                    if 'unit' in self._datadetails[key]:
+                        value = value.replace(self._datadetails[key]['unit'], "")
 
-                    if 'type' in self.__datadetails[key]:
-                        if self.__datadetails[key]['type'] == "float":
+                    if 'type' in self._datadetails[key]:
+                        if self._datadetails[key]['type'] == "float":
                             value = float(value)
                         
-                    if 'calculate' in self.__datadetails[key]:
-                        for cal in self.__datadetails[key]["calculate"]:
+                    if 'calculate' in self._datadetails[key]:
+                        for cal in self._datadetails[key]["calculate"]:
                             if cal not in self._keys:
                                 self._keys[cal] = 0
 
