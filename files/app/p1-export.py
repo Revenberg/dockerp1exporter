@@ -33,7 +33,7 @@ LOG = logging.getLogger("p1-export")
 class P1Prometheus(object):
     PROMETHEUS_PREFIX = ''
     _datadetails = {}
-    _gas_value = 0    
+    _gas_value = 0
     _prometheus = {}
     _keys = {}
 
@@ -98,7 +98,7 @@ class P1Prometheus(object):
             # TODO: build in some protection for infinite loops
 
         LOG.info("validate")
-        self.validate(datagram)       
+        self.validate(datagram)
         LOG.info("split")
         self.split( datagram)
         LOG.info("done")
@@ -120,10 +120,10 @@ class P1Prometheus(object):
         LOG.info("split")
         LOG.info(datagram)
         self._keys = {}
-        pattern = re.compile(b'(.*?)\\((.*?)\\)\r\n')        
-        for match in pattern.findall(datagram):            
+        pattern = re.compile(b'(.*?)\\((.*?)\\)\r\n')
+        for match in pattern.findall(datagram):
             key = match[0].decode("utf-8")
-            if key in self._datadetails:                
+            if key in self._datadetails:
                 if 'fieldname' in self._datadetails[key]:
                     LOG.info("found: " + key + " = " + match[1].decode("utf-8") + " : "+ self._datadetails[key]['description'])
 
@@ -143,7 +143,7 @@ class P1Prometheus(object):
                     if 'type' in self._datadetails[key]:
                         if self._datadetails[key]['type'] == "float":
                             value = float(value)
-                        
+
                     if 'calculate' in self._datadetails[key]:
                         for cal in self._datadetails[key]["calculate"]:
                             if cal not in self._keys:
@@ -156,34 +156,38 @@ class P1Prometheus(object):
                                 self._keys[cal] = self._keys[cal] - value
 
                         LOG.info(self._keys[cal])
-               
-                    LOG.info(fieldname)                    
+
+                    LOG.info("=============")
+                    LOG.info(fieldname)
                     LOG.info(prometheus)
                     LOG.info(description)
                     LOG.info(value)
                     LOG.info(source)
+                    LOG.info("=============")
 
                     if fieldname == ["GAS_READING"]:
                         if self._gas_value > 0:
                             if value > 0:
-                                fieldname = "GAS_DELTA"
-                                value = value - self._gas_value
+                                self.p1ToPrometheus("GAS_DELTA", prometheus,"Gas delta", value - self._gas_value)
                         self._gas_value = value
 
-                    if not fieldname in self._prometheus:
-                        if prometheus == "Info":
-                            self._prometheus[fieldname] = Info(self.PROMETHEUS_PREFIX + fieldname, description)
-                        if prometheus == "Gauge":
-                            self._prometheus[fieldname] = Gauge(self.PROMETHEUS_PREFIX + fieldname, description)                           
-
-                    if fieldname in self._prometheus:
-                        LOG.info("in prometheus")
-                        if prometheus == "Info":
-                            self._prometheus[fieldname].info(value)
-                        if prometheus == "Gauge":
-                            self._prometheus[fieldname].set(value)                    
+                    self.p1ToPrometheus(fieldname, prometheus,description, value)
             else:
                 LOG.warn("not found: " + key + " = " + match[1].decode("utf-8"))
+
+    def p1ToPrometheus(self, fieldname, prometheus, description, value):
+        if not fieldname in self._prometheus:
+            if prometheus == "Info":
+                self._prometheus[fieldname] = Info(self.PROMETHEUS_PREFIX + fieldname, description)
+            if prometheus == "Gauge":
+                self._prometheus[fieldname] = Gauge(self.PROMETHEUS_PREFIX + fieldname, description)
+
+        if fieldname in self._prometheus:
+            LOG.info("in prometheus")
+            if prometheus == "Info":
+                self._prometheus[fieldname].info(value)
+            if prometheus == "Gauge":
+                self._prometheus[fieldname].set(value)
 
 class P1PrometheusError(Exception):
     pass
@@ -201,7 +205,7 @@ class AppMetrics:
     def __init__(self, PROMETHEUS_PREFIX='', pool_frequency=60, device='/dev/ttyUSB0', baudrate=115200):
         self.pool_frequency = pool_frequency
         self.meter = P1Prometheus(device, baudrate, PROMETHEUS_PREFIX)
-        
+
     def run_metrics_loop(self):
         """Metrics fetching loop"""
 
@@ -216,21 +220,21 @@ class AppMetrics:
         """
 
         self.meter.read_one_packet()
-        
+
         LOG.info("Update prometheus")
 
 def main():
-    """Main entry point"""    
-    
+    """Main entry point"""
+
     app_metrics = AppMetrics(
         PROMETHEUS_PREFIX=PROMETHEUS_PREFIX,
         pool_frequency=pool_frequency,
-        device=device, 
+        device=device,
         baudrate=baudrate
     )
     start_http_server(PROMETHEUS_PORT)
     LOG.info("start prometheus port: %s", PROMETHEUS_PORT)
     app_metrics.run_metrics_loop()
- 
+
 if __name__ == "__main__":
     main()
