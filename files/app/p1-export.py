@@ -161,6 +161,7 @@ class P1Packet(object):
                     LOG.info("found: " + key + " = " + match[1].decode("utf-8") + " : "+ self._datadetails[key]['value'])
 
                     fieldname = self._datadetails[key]['key']
+                    prometheus = self._datadetails[key]['prometheus']
 
                     value = match[1].decode("utf-8")
                     splitted = value.split("(")
@@ -187,8 +188,9 @@ class P1Packet(object):
                         LOG.info(self._keys[cal])
 
                     LOG.info(fieldname)
+                    LOG.info(prometheus)
                     LOG.info(value)
-                    self._keys[fieldname] = value
+                    self._keys[fieldname] = { 'fieldname': fieldname, 'prometheus': prometheus, 'value': value }
             else:
                 LOG.warn("not found: " + key + " = " + match[1].decode("utf-8"))
 
