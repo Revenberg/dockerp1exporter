@@ -27,7 +27,7 @@ if [ $ex == true ]; then
 
     echo "==========================================================="
     echo "=                                                         ="
-    echo "=          docker run revenberg/p1exporter    ="
+    echo "=          docker-compose up                              ="
     echo "=                                                         ="
     echo "==========================================================="
 fi
