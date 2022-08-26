@@ -123,9 +123,7 @@ class P1Prometheus(object):
         pattern = re.compile(b'(.*?)\\((.*?)\\)\r\n')        
         for match in pattern.findall(datagram):            
             key = match[0].decode("utf-8")
-            LOG.info(key)
-            if key in self.__datadetails:
-                LOG.info("found")
+            if key in self.__datadetails:                
                 if 'fieldname' in self.__datadetails[key]:
                     LOG.info("found: " + key + " = " + match[1].decode("utf-8") + " : "+ self.__datadetails[key]['description'])
 
@@ -145,6 +143,7 @@ class P1Prometheus(object):
                     if 'type' in self.__datadetails[key]:
                         if self.__datadetails[key]['type'] == "float":
                             value = float(value)
+                        
                     if 'calculate' in self.__datadetails[key]:
                         for cal in self.__datadetails[key]["calculate"]:
                             if cal not in self._keys:

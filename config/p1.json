@@ -4,18 +4,25 @@
         "description": "Date-time stamp of the P1 message",
         "unit": "s",
         "OBIS_reference": "0-0:1.0.0.255",
+        "type": "string",
+        "fieldname": "Datetime",
         "prometheus":"Info"
+        
     },
     "1-3:0.2.8": {
         "source": "Electricity",
         "description": "Version information for P1 output",
         "OBIS_reference": "1-3:0.2.8.255",
+        "type": "string",
+        "fieldname": "version",
         "prometheus":"Info"
     },
     "0-0:96.1.1": {
         "source": "Electricity",
         "description": "Equipment identifier",
         "OBIS_reference": "0-0:96.1.1.255",
+        "type": "string",
+        "fieldname": "identifier",
         "prometheus":"Info"
     },
     "1-0:1.8.1": {
