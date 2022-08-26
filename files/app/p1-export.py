@@ -125,6 +125,7 @@ class P1Prometheus(object):
             key = match[0].decode("utf-8")
             LOG.info(key)
             if key in self.datadetails:
+                LOG.info("found")
                 if 'key' in self.datadetails[key]:
                     LOG.info("found: " + key + " = " + match[1].decode("utf-8") + " : "+ self.datadetails[key]['value'])
 
