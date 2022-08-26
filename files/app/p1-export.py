@@ -242,7 +242,8 @@ class AppMetrics:
             self.gas_value = values._keys["GAS_READING"]
 
         for k, v in values._keys.items():
-            LOG.info(k + v)
+            LOG.info(k)
+            LOG.info(v)
         
 #        self.weather_icon_name.info({ 'icon': w.weather_icon_name } )
 #        self.visibility_distance.set(w.visibility_distance)
