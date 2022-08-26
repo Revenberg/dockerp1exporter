@@ -216,6 +216,9 @@ class AppMetrics:
         self.meter = SmartMeter(device, baudrate)
 
         self.prometheus = {}
+        
+        self.prometheus['GAS_DELTA'] = Gauge(PROMETHEUS_PREFIX + 'GAS_DELTA', 'GAS_DELTA')
+
         for record in self.meter._datadetails: 
             if 'key' in self.meter._datadetails[record]:
                 if self.meter._datadetails[record]['prometheus'] == "Info":
@@ -241,9 +244,11 @@ class AppMetrics:
         if values._keys["GAS_READING"]:
             
             if self.gas_value > 0:
-                if values._keys["GAS_READING"] > 0:
-                    values._keys["GAS_DELTA"] = values._keys["GAS_READING"] - self.gas_value
-            self.gas_value = values._keys["GAS_READING"]
+                if values._keys["GAS_READING"]['value'] > 0:
+                    values._keys["GAS_DELTA"] = { 'fieldname': 'GAS_DELTA', 'prometheus': 'Gauge', 'value': values._keys["GAS_READING"] - self.gas_value, 'source': 'calculated' }
+                        
+
+            self.gas_value['value'] = values._keys["GAS_READING"]['value']
 
         for k, v in values._keys.items():
             LOG.info(k)
