@@ -186,7 +186,7 @@ class P1Prometheus(object):
         if fieldname in self._prometheus:
             LOG.info("in prometheus")
             if prometheus == "Info":
-                self._prometheus[fieldname].info(value)
+                self._prometheus[fieldname].info({ fieldname: value })
             if prometheus == "Gauge":
                 self._prometheus[fieldname].set(value)
 
