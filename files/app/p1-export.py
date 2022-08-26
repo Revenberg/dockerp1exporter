@@ -252,9 +252,9 @@ class AppMetrics:
         for k, v in values._keys.items():
             LOG.info("--------------------")
             LOG.info(k)
-            LOG.info(v)
-            LOG.info(v['value'])
-            LOG.info(v['prometheus'])
+            LOG.info(values._keys[k])
+            LOG.info(values._keys[k]['value'])
+            LOG.info(values._keys[k]['prometheus'])
 
             if v['prometheus'] == "Info":
                 self.weather_icon_name.info({ v['source']: v.value } )
