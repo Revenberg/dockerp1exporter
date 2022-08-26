@@ -21,7 +21,7 @@ if [ $ex == true ]; then
 
     docker image build -t revenberg/p1exporter:latest .
 
-    #docker push revenberg/p1exporter:latest
+    docker push revenberg/p1exporter:latest
 
     # testing: 
 

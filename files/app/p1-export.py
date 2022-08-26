@@ -18,12 +18,12 @@ crc16 = crcmod.predefined.mkPredefinedCrcFun('crc16')
 
 LOG_LEVEL = os.getenv("LOG_LEVEL", "WARN")
 
-PROMETHEUS_PREFIX = os.getenv("PROMETHEUS_PREFIX", "p1")
+PROMETHEUS_PREFIX = os.getenv("PROMETHEUS_PREFIX", "")
 PROMETHEUS_PORT   = int(os.getenv("PROMETHEUS_PORT", "9003"))
 
-pool_frequency = int(os.getenv("POOL_FREQUENCY", "60"))
-device = os.getenv("P1_DEVICE", "/dev/ttyUSB0")
-baudrate = int(os.getenv("P1_BAUDRATE", 115200))
+POOL_FREQUENCY = int(os.getenv("POOL_FREQUENCY", "60"))
+DEVICE = os.getenv("P1_DEVICE", "/dev/ttyUSB0")
+BAUDRATE = int(os.getenv("P1_BAUDRATE", 115200))
 
 LOGFORMAT = '%(asctime)-15s %(message)s'
 
@@ -37,12 +37,16 @@ class P1Prometheus(object):
     _prometheus = {}
     _keys = {}
 
-    def __init__(self, device, baudrate, PROMETHEUS_PREFIX, *args, **kwargs):
+    def __init__(self, DEVICE, BAUDRATE, PROMETHEUS_PREFIX, *args, **kwargs):
+
+        if PROMETHEUS_PREFIX != '':
+            PROMETHEUS_PREFIX = PROMETHEUS_PREFIX + "_"            
         self.PROMETHEUS_PREFIX = PROMETHEUS_PREFIX
+
         try:
             self.serial = serial.Serial(
-                device,
-                kwargs.get('baudrate', baudrate),
+                DEVICE,
+                kwargs.get('baudrate', BAUDRATE),
                 timeout=10,
                 bytesize=serial.SEVENBITS,
                 parity=serial.PARITY_EVEN,
@@ -197,22 +201,22 @@ class P1PacketError(Exception):
     pass
 
 class AppMetrics:
-    pool_frequency = 0
+    POOL_FREQUENCY = 0
     """
     Representation of Prometheus metrics and loop to fetch and transform
     application metrics into Prometheus metrics.
     """
 
-    def __init__(self, PROMETHEUS_PREFIX='', pool_frequency=60, device='/dev/ttyUSB0', baudrate=115200):
-        self.pool_frequency = pool_frequency
-        self.meter = P1Prometheus(device, baudrate, PROMETHEUS_PREFIX)
+    def __init__(self, PROMETHEUS_PREFIX='', POOL_FREQUENCY=60, DEVICE='/dev/ttyUSB0', BAUDRATE=115200):
+        self.POOL_FREQUENCY = POOL_FREQUENCY
+        self.meter = P1Prometheus(DEVICE, BAUDRATE, PROMETHEUS_PREFIX)
 
     def run_metrics_loop(self):
         """Metrics fetching loop"""
 
         while True:
             self.fetch()
-            time.sleep(self.pool_frequency)
+            time.sleep(self.POOL_FREQUENCY)
 
     def fetch(self):
         """
@@ -229,9 +233,9 @@ def main():
 
     app_metrics = AppMetrics(
         PROMETHEUS_PREFIX=PROMETHEUS_PREFIX,
-        pool_frequency=pool_frequency,
-        device=device,
-        baudrate=baudrate
+        POOL_FREQUENCY=POOL_FREQUENCY,
+        DEVICE=DEVICE,
+        BAUDRATE=BAUDRATE
     )
     start_http_server(PROMETHEUS_PORT)
     LOG.info("start prometheus port: %s", PROMETHEUS_PORT)

@@ -9,6 +9,7 @@ services:
       - LOG_LEVEL=DEBUG
       - P1_DEVICE=/dev/ttyUSB0
       - P1_BAUDRATE=115200
+      - PROMETHEUS_PREFIX=P1
     devices:
       - /dev/ttyUSB0:/dev/ttyUSB0
     restart: always   
