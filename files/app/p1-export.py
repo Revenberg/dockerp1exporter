@@ -241,7 +241,8 @@ class AppMetrics:
                     values._keys["GAS_DELTA"] = values._keys["GAS_READING"] - self.gas_value
             self.gas_value = values._keys["GAS_READING"]
 
-        json_body = { k: v for k, v in values._keys.items() }                     
+        for k, v in values._keys.items():
+            LOG.info(k + v)
 
         LOG.info(f"Send topic `{json_body}`")
         
