@@ -179,9 +179,9 @@ class P1Prometheus(object):
                     if fieldname in self._prometheus:
                         LOG.info("in prometheus")
                         if prometheus == "Info":
-                            self._prometheus[key].info(value)
+                            self._prometheus[fieldname].info(value)
                         if prometheus == "Gauge":
-                            self._prometheus[key].set(value)                    
+                            self._prometheus[fieldname].set(value)                    
             else:
                 LOG.warn("not found: " + key + " = " + match[1].decode("utf-8"))
 
