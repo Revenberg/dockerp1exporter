@@ -162,6 +162,7 @@ class P1Packet(object):
 
                     fieldname = self._datadetails[key]['key']
                     prometheus = self._datadetails[key]['prometheus']
+                    source = self._datadetails[key]['source']
 
                     value = match[1].decode("utf-8")
                     splitted = value.split("(")
@@ -190,7 +191,8 @@ class P1Packet(object):
                     LOG.info(fieldname)
                     LOG.info(prometheus)
                     LOG.info(value)
-                    self._keys[fieldname] = { 'fieldname': fieldname, 'prometheus': prometheus, 'value': value }
+                    LOG.info(source)
+                    self._keys[fieldname] = { 'fieldname': fieldname, 'prometheus': prometheus, 'value': value, 'source': source }
             else:
                 LOG.warn("not found: " + key + " = " + match[1].decode("utf-8"))
 
@@ -246,9 +248,12 @@ class AppMetrics:
         for k, v in values._keys.items():
             LOG.info(k)
             LOG.info(v)
-        
-#        self.weather_icon_name.info({ 'icon': w.weather_icon_name } )
-#        self.visibility_distance.set(w.visibility_distance)
+            LOG.info(v['prometheus'])
+
+            if v['prometheus'] == "Info":
+                self.weather_icon_name.info({ v['source']: v.value } )
+            if v['prometheus'] == "Gauge":
+                self.visibility_distance.set(v['value'])
         
         LOG.info("Update prometheus")
 
