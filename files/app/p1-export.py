@@ -217,7 +217,7 @@ class AppMetrics:
 
         self.prometheus = {}
         
-        self.prometheus['GAS_DELTA'] = Gauge(PROMETHEUS_PREFIX + 'GAS_DELTA', 'GAS_DELTA')
+        self.prometheus['GAS_DELTA'] = Gauge(PROMETHEUS_PREFIX + 'GAS_DELTA', 'Calculated GAS delta')
 
         for record in self.meter._datadetails: 
             if 'key' in self.meter._datadetails[record]:
