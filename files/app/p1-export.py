@@ -32,8 +32,8 @@ LOG = logging.getLogger("p1-export")
 
 class P1Prometheus(object):
     PROMETHEUS_PREFIX = ''
-    datadetails = {}
-    gas_value = 0    
+    __datadetails = {}
+    _gas_value = 0    
     _prometheus = {}
     _keys = {}
 
@@ -55,7 +55,7 @@ class P1Prometheus(object):
             self.port = self.serial.name
 
         f = open('p1.json', "r")
-        self.datadetails = json.load(f)
+        self.__datadetails = json.load(f)
         f.close()
 
     def connect(self):
@@ -124,36 +124,36 @@ class P1Prometheus(object):
         for match in pattern.findall(datagram):            
             key = match[0].decode("utf-8")
             LOG.info(key)
-            if key in self.datadetails:
+            if key in self.__datadetails:
                 LOG.info("found")
-                if 'fieldname' in self.datadetails[key]:
-                    LOG.info("found: " + key + " = " + match[1].decode("utf-8") + " : "+ self.datadetails[key]['description'])
+                if 'fieldname' in self.__datadetails[key]:
+                    LOG.info("found: " + key + " = " + match[1].decode("utf-8") + " : "+ self.__datadetails[key]['description'])
 
-                    fieldname = self.datadetails[key]['fieldname']
-                    prometheus = self.datadetails[key]['prometheus']
-                    source = self.datadetails[key]['source']
-                    description = self.datadetails[key]['description']
+                    fieldname = self.__datadetails[key]['fieldname']
+                    prometheus = self.__datadetails[key]['prometheus']
+                    source = self.__datadetails[key]['source']
+                    description = self.__datadetails[key]['description']
 
                     value = match[1].decode("utf-8")
                     splitted = value.split("(")
                     if len(splitted) > 1:
                         value = splitted[1]
 
-                    if 'unit' in self.datadetails[key]:
-                        value = value.replace(self.datadetails[key]['unit'], "")
+                    if 'unit' in self.__datadetails[key]:
+                        value = value.replace(self.__datadetails[key]['unit'], "")
 
-                    if 'type' in self.datadetails[key]:
-                        if self.datadetails[key]['type'] == "float":
+                    if 'type' in self.__datadetails[key]:
+                        if self.__datadetails[key]['type'] == "float":
                             value = float(value)
-                    if 'calculate' in self.datadetails[key]:
-                        for cal in self.datadetails[key]["calculate"]:
+                    if 'calculate' in self.__datadetails[key]:
+                        for cal in self.__datadetails[key]["calculate"]:
                             if cal not in self._keys:
                                 self._keys[cal] = 0
 
-                            if self.datadetails[key]["calculate"][cal] == "add":
+                            if self._datadetails[key]["calculate"][cal] == "add":
                                 self._keys[cal] = self._keys[cal] + value
 
-                            if self.datadetails[key]["calculate"][cal] == "minus":
+                            if self._datadetails[key]["calculate"][cal] == "minus":
                                 self._keys[cal] = self._keys[cal] - value
 
                         LOG.info(self._keys[cal])
@@ -165,23 +165,23 @@ class P1Prometheus(object):
                     LOG.info(source)
 
                     if fieldname == ["GAS_READING"]:
-                        if self.gas_value > 0:
+                        if self._gas_value > 0:
                             if value > 0:
                                 fieldname = "GAS_DELTA"
-                                value = value - self.gas_value
-                        self.gas_value = value
+                                value = value - self._gas_value
+                        self._gas_value = value
 
-                    if not fieldname in prometheus:
+                    if not fieldname in self._prometheus:
                         if prometheus == "Info":
-                            prometheus[key] = Info(self.PROMETHEUS_PREFIX + fieldname, description)
+                            self._prometheus[key] = Info(self.PROMETHEUS_PREFIX + fieldname, description)
                         if prometheus == "Gauge":
-                            prometheus[key] = Gauge(self.PROMETHEUS_PREFIX + fieldname, description)                           
+                            self._prometheus[key] = Gauge(self.PROMETHEUS_PREFIX + fieldname, description)                           
 
-                    if fieldname in prometheus:
+                    if fieldname in self._prometheus:
                         if prometheus == "Info":
-                            prometheus[key].info(value)
+                            self._prometheus[key].info(value)
                         if prometheus == "Gauge":
-                            prometheus[key].set(value)                    
+                            self._prometheus[key].set(value)                    
             else:
                 LOG.warn("not found: " + key + " = " + match[1].decode("utf-8"))
 
